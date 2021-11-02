@@ -3,6 +3,8 @@ const inquirer = require('inquirer');
 const path = require('path');
 const fs = require('fs');
 const util = require('util');
+const html = require('./src/html')
+const card = require('./src/card')
 
 // Required Employee information 
 const Employee = require('./lib/Employee');
@@ -17,7 +19,6 @@ const output_dir = path.resolve(__dirname, 'output');
 const outputPath =path.join(output_dir, 'team.html');
 
 const render = require('./lib/htmlRenderer');
-const Employee = require('./lib/Employee');
 const { lastValueFrom, identity } = require('rxjs');
     
 const questions = [
@@ -88,15 +89,15 @@ const { adding } = await inquirer.prompt(confirm);
 addMore = adding;
 }
 
-const html = render(employees);
+console.log(employees)
 
-if(lsf.existsSync(outputPath)) {
-    const erro = await mkdirAsync(output_dir);
-    error && console.error(error);
-}
-
-const error = await writeFileAsync(outputPath, html);
-error && console.error(error);
+let cards = ""
+  
+ for (let i = 0; i < employees.length; i++) {
+         
+       cards = cards + card(employees[i])
+ }
+  fs.writeFileSync("./dist/index.html", html(cards))
 
 };
 
